@@ -96,21 +96,36 @@ const CodePage = () => {
             {messages.map((message, index) => (
                     <div key={index}
                         className={cn("p-8 w-full flex items-start gap-x-8 rounded-lg",
-                                   message.role==="user" ? "bg-white border border-black/10": "bg-muted"
+                            message.role==="user" ? "bg-white border border-black/10": "bg-muted"
             )}   
                     >
-                    {message.role==="user" ? <UserAvatar/> : <BotAvatar/>}
-                    <p className="text-sm">
-                    {Array.isArray(message.content)
-                        ? message.content.map((part, partIndex) => {
-                            if ("text" in part) {
-                            return <span key={partIndex}>{part.text}</span>;
-                            }
-                            // Placeholder for handling other types like images
-                            return null;
-                        })
-                        : message.content}
-                    </p>
+            {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
+            <ReactMarkdown
+                components={{
+                  pre: ({ node, ...props }) => (
+                    <div className="overflow-auto w-full my-2 bg-black/10 p-2 m-5 rounded-lg">
+                      <pre {...props} />
+                    </div>
+                  ),
+                  code: ({ node, ...props }) => (
+                    <code className="bg-black/10 rounded-lg p-1" {...props} />
+                  )
+                }}
+                className='text-sm overflow-hidden leading-7'
+              >
+                {Array.isArray(message.content)
+                  ? message.content
+                      .map((part, partIndex) => {
+                        if ("text" in part) {
+                          return <span key={partIndex}>{part.text}</span>;
+                        } else {
+                          // Handle 'ChatCompletionContentPartImage' case here
+                          return null;
+                        }
+                      })
+                      .join("")
+                  : message.content || ""}
+              </ReactMarkdown>
     </div>
   ))}
 </div>
