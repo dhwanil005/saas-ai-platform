@@ -39,7 +39,7 @@ const testimonials = [
       "Streamlined our operations with AI automation. Highly recommend for efficiency.",
   },
   {
-    name: "Ragnil Pate",
+    name: "Ragnil Patel",
     avatar: "RP",
     title: "HR Manager",
     description:
