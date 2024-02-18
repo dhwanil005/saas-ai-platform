@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "prisma generate",
+    "prettier": "prettier --write ."
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.7",
@@ -46,6 +48,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.1.0",
     "postcss": "^8",
+    "prettier": "^3.2.5",
     "prisma": "^5.9.1",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
