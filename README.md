@@ -32,13 +32,15 @@
 * __Stripe__: Online payment processing.
 
 
+## Landing
+
+![Landing](public/landing.png)
+
 ## Dashboard
 
 ![Dashboard.](public/dashboard.png)
 
-## Landing
 
-![Landing](public/landing.png)
 
  [Deployment Link](https://genius-five-xi.vercel.app/)
 
