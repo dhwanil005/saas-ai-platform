@@ -11,10 +11,6 @@ import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import {
-  ChatCompletion,
-  ChatCompletionMessageParam,
-} from "openai/resources/index.mjs";
 import { useState } from "react";
 import { Empty } from "@/components/empty";
 import { Loader } from "@/components/loader";
@@ -25,10 +21,15 @@ import { ProModal } from "@/components/pro-modal";
 import { useProModal } from "@/hooks/use-pro-modal";
 import toast from "react-hot-toast";
 
+type Message = {
+  role: "user" | "assistant" | "system";
+  content: string | { type: "text"; text: string }[];
+};
+
 const ConversationPage = () => {
   const router = useRouter();
   const proModal = useProModal();
-  const [messages, setMessages] = useState<ChatCompletionMessageParam[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -40,7 +41,7 @@ const ConversationPage = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const userMessage: ChatCompletionMessageParam = {
+      const userMessage: Message = {
         role: "user",
         content: values.prompt,
       };
@@ -68,7 +69,7 @@ const ConversationPage = () => {
     <div>
       <Heading
         title="Conversation"
-        description="Our most advanced converstion model"
+        description="Our most advanced conversation model"
         icon={MessageSquare}
         iconColor="text-violet-500"
         bgColor="bg-violet-500/10"
@@ -103,7 +104,7 @@ const ConversationPage = () => {
           </form>
         </Form>
       </div>
-      <div className="space-y-4 mt-4">
+      <div className="space-y-4 mt-4 px-4 lg:px-8">
         {isLoading && (
           <div className="p-8 rounded-lg w-full flex items-center justify-center bg-muted">
             <Loader />
@@ -124,17 +125,18 @@ const ConversationPage = () => {
               )}
             >
               {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
-              <p className="text-sm">
-                {Array.isArray(message.content)
-                  ? message.content.map((part, partIndex) => {
-                      if ("text" in part) {
-                        return <span key={partIndex}>{part.text}</span>;
-                      }
-                      // Placeholder for handling other types like images
-                      return null;
-                    })
-                  : message.content}
-              </p>
+              <div className="text-sm whitespace-pre-wrap">
+                {typeof message.content === "string" 
+                  ? message.content 
+                  : Array.isArray(message.content)
+                    ? message.content.map((part, partIndex) => {
+                        if ("text" in part) {
+                          return <span key={partIndex}>{part.text}</span>;
+                        }
+                        return null;
+                      })
+                    : null}
+              </div>
             </div>
           ))}
         </div>
