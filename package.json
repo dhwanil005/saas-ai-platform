@@ -13,6 +13,7 @@
   "dependencies": {
     "@clerk/nextjs": "^4.29.7",
     "@hookform/resolvers": "^3.3.4",
+    "@huggingface/inference": "^4.7.1",
     "@prisma/client": "^5.9.1",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -53,9 +54,7 @@
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
   },
-  
   "engines": {
     "node": "22.x"
-  
-}
+  }
 }

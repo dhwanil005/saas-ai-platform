@@ -54,6 +54,7 @@ export async function POST(req: Request) {
       body: JSON.stringify({
         model: "HuggingFaceTB/SmolLM3-3B:hf-inference",
         messages: hfMessages,
+      //  stream: true,
       }),
     });
 
@@ -66,7 +67,7 @@ export async function POST(req: Request) {
     }
 
     const result = await response.json();
-  
+
     let hfContent = "I apologize, but I couldn't generate a response.";
 
     if (result?.choices?.[0]?.message?.content) {

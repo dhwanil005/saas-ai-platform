@@ -1,12 +1,10 @@
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
-import Replicate from "replicate";
+import { InferenceClient } from "@huggingface/inference";
 import { increaseApiLimit, checkApiLimit } from "@/lib/api-limit";
 import { checkSubscription } from "@/lib/subscription";
 
-const replicate = new Replicate({
-  auth: process.env.REPLICATE_API_TOKEN!,
-});
+const hf = new InferenceClient(process.env.HF_TOKEN!);
 
 export async function POST(req: Request) {
   try {
@@ -28,21 +26,19 @@ export async function POST(req: Request) {
       return new NextResponse("Free Trial has expired", { status: 403 });
     }
 
-    const response = await replicate.run(
-      "anotherjesse/zeroscope-v2-xl:9f747673945c62801b13b84701c783929c0ee784e4748ec062204894dda1a351",
-      {
-        input: {
-          width: 1024,
-          height: 576,
-          prompt,
-        },
-      },
-    );
+    const response = await hf.textToVideo({
+    provider: "replicate",
+    model: "Wan-AI/Wan2.2-TI2V-5B",
+	inputs: prompt,
+});
 
     if (isPro) {
       await increaseApiLimit();
     }
-    return NextResponse.json(response);
+    const buffer = Buffer.from(await response.arrayBuffer());
+    const base64 = buffer.toString("base64");
+    const videoUrl = `data:video/mp4;base64,${base64}`;
+    return NextResponse.json(videoUrl);
   } catch (error) {
     console.log("CONVERSATION_ERROR", error);
     return new NextResponse("Internal Error", { status: 500 });
