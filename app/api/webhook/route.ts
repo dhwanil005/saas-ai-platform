@@ -19,7 +19,7 @@ export async function POST(req: Request) {
   } catch (error: any) {
     return new NextResponse(`Webhook error: ${error.message}`, { status: 400 });
   }
-
+  console.log("trigerring vercel update")
   const session = event.data.object as Stripe.Checkout.Session;
 
   if (event.type === "checkout.session.completed") {
